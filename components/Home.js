@@ -1,7 +1,6 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {Context} from '../context.js';
-import {StyleSheet, View, Text, Button} from 'react-native';
-import Login from './Login';
+import {StyleSheet} from 'react-native';
 import Messages from './Messages/Messages.js';
 import Rooms from './Rooms/Rooms.js';
 
@@ -14,14 +13,5 @@ const Home = () => {
     return <Rooms />;
   }
 };
-
-const styles = StyleSheet.create({
-  StyledView: {},
-  view: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-});
 
 export default Home;

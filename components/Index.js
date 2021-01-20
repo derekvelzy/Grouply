@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {StyleSheet, View, Text, Button} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Home from './Home.js';
 import Login from './Login.js';
 import auth from '@react-native-firebase/auth';
@@ -32,16 +32,5 @@ const Index = () => {
     return <Login />;
   }
 };
-
-const styles = StyleSheet.create({
-  view: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  signinbutton: {
-    alignSelf: 'center',
-  },
-});
 
 export default Index;

@@ -18,17 +18,17 @@ import MyRoom from './MyRoom.js';
 import LinearGradient from 'react-native-linear-gradient';
 
 const Rooms = () => {
-  const {setRoom, user} = useContext(Context);
+  const {setRoom, user, setNickname} = useContext(Context);
   const [rooms, setRooms] = useState([]);
   const [myRooms, setMyRooms] = useState([]);
-  const [search, setSearch] = useState([]);
+  const [search, setSearch] = useState('');
   const [filtRooms, setFiltRooms] = useState([]);
   const [filtMyRooms, setMyFiltRooms] = useState([]);
   const [animate, setAnimate] = useState(new Animated.Value(0));
   const [slider, setSlider] = useState(false);
   const [roomName, setRoomName] = useState('');
   const [code, setCode] = useState('');
-  const [nickname, setNickname] = useState('');
+  const [nicknameDraft, setNicknameDraft] = useState('');
   const [lengthErr, setLengthErr] = useState(false);
   const [existingErr, setExistingErr] = useState(false);
   const [nicknameErr, setNicknameErr] = useState(false);
@@ -48,7 +48,7 @@ const Rooms = () => {
       setLengthErr(true);
       setExistingErr(false);
       setNicknameErr(false);
-    } else if (nickname.length === 0) {
+    } else if (nicknameDraft.length === 0) {
       setNicknameErr(true);
       setLengthErr(false);
       setExistingErr(false);
@@ -67,7 +67,13 @@ const Rooms = () => {
             .then(() => {
               _start(true);
               setSlider(!slider);
-            })
+            });
+          await firestore()
+            .collection('Rooms')
+            .doc(roomName)
+            .collection('Members')
+            .doc(nicknameDraft)
+            .set({Name: nicknameDraft, Email: user.email, On: true});
           await firestore()
             .collection('Users')
             .doc(user.email)
@@ -75,8 +81,10 @@ const Rooms = () => {
             .doc(roomName)
             .set({
               name: roomName,
-              nickname,
+              nickname: nicknameDraft,
             });
+          setRoom(roomName);
+          setNickname(nicknameDraft);
         } catch (e) {
           console.log('error adding room', e);
         }
@@ -163,10 +171,10 @@ const Rooms = () => {
             <Text style={styles.noRooms}>No Rooms</Text> :
             myRooms.map((name) => (
               <MyRoom
-                key={name.name}
                 name={name.name}
                 rooms={rooms}
                 setRoom={setRoom}
+                key={name.name}
               />
             ))
           )
@@ -176,28 +184,28 @@ const Rooms = () => {
             <Text style={styles.noRooms}>No Rooms</Text> :
             filtMyRooms.map((name) => (
             <MyRoom
-              key={name.name}
               name={name.name}
               rooms={rooms}
               setRoom={setRoom}
+              key={name.name}
             />)
           ))}
         <Text style={styles.title}>Browse Rooms</Text>
         {filtRooms.length === 0 && search.length === 0
           ? rooms.map((name) => (
               <Room
-                key={name.name}
                 name={name.name}
                 rooms={rooms}
                 setRoom={setRoom}
+                key={name.name}
               />
             ))
           : filtRooms.map((name) => (
               <Room
-                key={name.name}
                 name={name.name}
                 rooms={rooms}
                 setRoom={setRoom}
+                key={name.name}
               />
             ))}
         <View style={styles.extraScroll}></View>
@@ -253,40 +261,40 @@ const Rooms = () => {
           style={nicknameErr ? {display: 'flex', color: 'red', fontSize: 16} : {display: 'none'}}>
             Must enter a Nickname
         </Text>
-        <Text style={{ marginTop: 20, fontSize: 18 }}>Room Name</Text>
+        <Text style={{ marginTop: 20, fontSize: 18, fontFamily: 'Avenir' }}>Room Name</Text>
         <TextInput
           placeholder="Room Name"
           style={styles.roomInput}
           value={roomName}
           onChangeText={(e) => setRoomName(e)}
         />
-        <Text style={{ marginTop: 20, fontSize: 18 }}>Code</Text>
+        <Text style={{ marginTop: 20, fontSize: 18, fontFamily: 'Avenir'}}>Code</Text>
         <TextInput
           placeholder="Code"
           style={styles.roomInput}
           value={code}
           onChangeText={(e) => setCode(e)}
         />
-        <Text style={{ marginTop: 20, fontSize: 18 }}>Nickname</Text>
+        <Text style={{ marginTop: 20, fontSize: 18, fontFamily: 'Avenir' }}>Nickname</Text>
         <TextInput
           placeholder="Nickname"
           style={styles.roomInput}
-          value={nickname}
-          onChangeText={(e) => setNickname(e)}
+          value={nicknameDraft}
+          onChangeText={(e) => setNicknameDraft(e)}
         />
         <View style={styles.shadow}>
-        <LinearGradient
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 2}}
-          colors={['#ff913c', '#e7605c', '#ff4618']}
-          style={styles.createGrad}>
-          <TouchableOpacity
-            style={styles.generate}
-            onPress={() => createRoom()}
-           >
-            <Text style={{ fontSize: 18, color: 'white' }}>Create</Text>
-          </TouchableOpacity>
-        </LinearGradient>
+          <LinearGradient
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 2}}
+            colors={['#ff913c', '#e7605c', '#ff4618']}
+            style={styles.createGrad}>
+            <TouchableOpacity
+              style={styles.generate}
+              onPress={() => createRoom()}
+            >
+              <Text style={{ fontSize: 22, color: 'white', fontFamily: 'Avenir' }}>Create</Text>
+            </TouchableOpacity>
+          </LinearGradient>
         </View>
         <TouchableOpacity
           style={styles.close}
@@ -298,7 +306,7 @@ const Rooms = () => {
             setNicknameErr(false);
           }}
          >
-          <Text style={{ color: 'white', fontSize: 18 }}>Close</Text>
+          <Text style={{ fontSize: 22, color: 'white', fontFamily: 'Avenir' }}>Close</Text>
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -351,6 +359,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 10,
     fontWeight: 'bold',
+    fontFamily: 'Avenir Next',
   },
   createText: {
     fontSize: 36,
@@ -387,12 +396,14 @@ const styles = StyleSheet.create({
     width: 260,
     height: 60,
     textAlign: 'center',
+    fontFamily: 'Avenir'
   },
   noRooms: {
     marginLeft: 10,
     marginTop: 10,
     fontSize: 16,
     color: 'rgb(120, 120, 120)',
+    fontFamily: 'Avenir',
   },
   signinbutton: {
     alignSelf: 'center',
@@ -424,6 +435,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 22,
     marginTop: 16,
+    fontFamily: 'Avenir',
   },
 });
 

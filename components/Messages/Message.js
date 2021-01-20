@@ -1,11 +1,5 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useContext} from 'react';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {Context} from '../../context.js';
 import LinearGradient from 'react-native-linear-gradient';
 

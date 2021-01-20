@@ -10,7 +10,7 @@ import {
 import {Context} from '../../context.js';
 import firestore from '@react-native-firebase/firestore';
 
-const Room = ({key, name, rooms, setRoom}) => {
+const Room = ({name, rooms, setRoom}) => {
   const {user, setNickname} = useContext(Context);
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState('');
@@ -38,6 +38,12 @@ const Room = ({key, name, rooms, setRoom}) => {
                 name: selection,
                 nickname: writeNickname,
               });
+            firestore()
+              .collection('Rooms')
+              .doc(selection)
+              .collection('Members')
+              .doc(writeNickname)
+              .set({Name: writeNickname, Email: user.email, On: true});
             setNickname(writeNickname);
           } else {
             setError(true);
@@ -64,7 +70,7 @@ const Room = ({key, name, rooms, setRoom}) => {
               elevation: 21,
             }
           : {
-              height: 246,
+              height: 254,
               padding: 24,
               margin: 10,
               borderRadius: 20,
@@ -94,11 +100,15 @@ const Room = ({key, name, rooms, setRoom}) => {
                   marginTop: 10,
                   marginBottom: 10,
                   color: 'red',
+                  fontFamily: 'Avenir',
+                  fontSize: 16,
                 }
               : {
                   color: 'black',
                   marginTop: 10,
                   marginBottom: 10,
+                  fontFamily: 'Avenir',
+                  fontSize: 16,
                 }
           }>
           {error ? 'Incorrect Room Code' : 'Enter Room Code and Nickname'}
@@ -120,6 +130,8 @@ const Room = ({key, name, rooms, setRoom}) => {
                     paddingLeft: 15,
                     marginBottom: 12,
                     marginTop: 6,
+                    fontFamily: 'Avenir',
+                    fontSize: 16,
                   }
                 : {
                     backgroundColor: 'rgb(220, 220, 220)',
@@ -129,6 +141,8 @@ const Room = ({key, name, rooms, setRoom}) => {
                     paddingLeft: 15,
                     marginBottom: 12,
                     marginTop: 6,
+                    fontFamily: 'Avenir',
+                    fontSize: 16,
                   }
             }
             placeholder="Nick Name"
@@ -168,9 +182,12 @@ const styles = StyleSheet.create({
   },
   joinText: {
     color: 'white',
+    fontFamily: 'Avenir',
+    fontSize: 20,
   },
   roomName: {
     fontSize: 24,
+    fontFamily: 'Avenir Next',
   },
   passInput: {
     backgroundColor: 'rgb(220, 220, 220)',
