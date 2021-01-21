@@ -1,4 +1,3 @@
-# Grouply
 # Grouply #
 [Link to Demo Video on Youtube](https://www.youtube.com/watch?v=pGqhcfDYEcQ)
 
