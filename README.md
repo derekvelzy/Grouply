@@ -6,10 +6,14 @@
 This mobile app was created for people to join private group chats for people with similar interests, or create chat rooms for others to join. The chat room allos people to send instant messages and react to each message with emoji reactions.
 
 ## UX GIF ##
-![User Story](https://grouply.s3-us-west-1.amazonaws.com/Grouplygif.gif)
+<img src="https://grouply.s3-us-west-1.amazonaws.com/Grouplygif.gif" height="600">
+
 ## Screenshots ##
 <img src="https://grouply.s3-us-west-1.amazonaws.com/GrouplyWelcome.png" height="400">
-<img src="https://grouply.s3-us-west-1.amazonaws.com/GrouplyWelcome.png" height="400">
+<img src="https://grouply.s3-us-west-1.amazonaws.com/GrouplyLogin.png" height="400">
+<img src="https://grouply.s3-us-west-1.amazonaws.com/GrouplyHome.png" height="400">
+<img src="https://grouply.s3-us-west-1.amazonaws.com/GrouplyChat.png" height="400">
+<img src="https://grouply.s3-us-west-1.amazonaws.com/GrouplyEmoji.png" height="400">
 
 ## Features ##
 #### Authentication ####
