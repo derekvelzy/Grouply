@@ -8,11 +8,8 @@ This mobile app was created for people to join private group chats for people wi
 ## UX GIF ##
 ![User Story](https://grouply.s3-us-west-1.amazonaws.com/Grouplygif.gif)
 ## Screenshots ##
-![Grouply Welcome](https://grouply.s3-us-west-1.amazonaws.com/GrouplyWelcome.png)
-![Grouply Login](https://grouply.s3-us-west-1.amazonaws.com/GrouplyLogin.png)
-![Grouply Home](https://grouply.s3-us-west-1.amazonaws.com/GrouplyHome.png)
-![Group Chat](https://grouply.s3-us-west-1.amazonaws.com/GrouplyChat.png)
-![Group Emoji](https://grouply.s3-us-west-1.amazonaws.com/GrouplyEmoji.png)
+<img src="https://grouply.s3-us-west-1.amazonaws.com/GrouplyWelcome.png" height="400">
+<img src="https://grouply.s3-us-west-1.amazonaws.com/GrouplyWelcome.png" height="400">
 
 ## Features ##
 #### Authentication ####
