@@ -42,7 +42,8 @@ buck-out/
 !debug.keystore
 
 keys.js
-ios
+GrouplyApp.xcodeproj
+GrouplyApp.xcworkspace
 android
 
 # fastlane
