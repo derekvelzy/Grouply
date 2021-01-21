@@ -42,6 +42,8 @@ buck-out/
 !debug.keystore
 
 keys.js
+ios
+android
 
 # fastlane
 #
