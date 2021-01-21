@@ -61,7 +61,11 @@ const Emojis = ({addEmoji, open, setSlider}) => {
 
   return (
     <ScrollView style={styles.scrollWindow}>
-      <View style={styles.container}>{emojiElements}</View>
+      {emojiElements.length === 0 ? (
+        <View style={styles.loader} />
+      ) : (
+        <View style={styles.container}>{emojiElements}</View>
+      )}
     </ScrollView>
   );
 };
