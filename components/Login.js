@@ -11,7 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {GoogleSigninButton} from '@react-native-community/google-signin';
 
 const Login = () => {
-  const {google, login, signup} = useContext(Context);
+  const {google, login, signup, incorrect, setIncorrect} = useContext(Context);
 
   const [type, setType] = useState('main');
   const [email, setEmail] = useState('');
@@ -30,7 +30,10 @@ const Login = () => {
           <Text style={styles.title}>Grouply</Text>
           <TouchableOpacity
             style={styles.mainSignup}
-            onPress={() => setType('signup')}>
+            onPress={() => {
+              setType('signup');
+              setIncorrect(false);
+            }}>
             <Text
               style={{color: 'white', fontSize: 24, fontFamily: 'Avenir Next'}}>
               Signup
@@ -38,7 +41,10 @@ const Login = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.mainLogin}
-            onPress={() => setType('login')}>
+            onPress={() => {
+              setType('login');
+              setIncorrect(false);
+            }}>
             <Text
               style={{
                 color: '#ff913c',
@@ -129,6 +135,20 @@ const Login = () => {
           value={pass}
           onChangeText={(e) => setPass(e)}
         />
+        <Text
+          style={
+            incorrect
+              ? // eslint-disable-next-line react-native/no-inline-styles
+                {
+                  display: 'flex',
+                  alignSelf: 'center',
+                  marginTop: 14,
+                  color: 'red',
+                }
+              : {display: 'none'}
+          }>
+          Incorrect Username or Password
+        </Text>
         <View style={styles.gradButCont}>
           <LinearGradient
             start={{x: 0, y: 0}}

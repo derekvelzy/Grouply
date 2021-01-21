@@ -1,157 +1,99 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {createContext, useState} from 'react';
-import {AppState, Text, TouchableOpacity, Dimensions} from 'react-native';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import {GoogleSignin} from '@react-native-community/google-signin';
-import {googleWebClientID} from './keys.js';
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+  Dimensions,
+} from 'react-native';
+import {Context} from '../../context.js';
 
-GoogleSignin.configure({
-  webClientId: googleWebClientID,
-});
-
-export const Context = createContext(null);
-
-export const ConfigProvider = ({children}) => {
-  const [user, setUser] = useState();
-  const [room, setRoom] = useState();
-  const [nickname, setNickname] = useState('');
-  const [signupError, setSignupError] = useState(false);
+const Emojis = ({addEmoji, open, setSlider}) => {
   const [emojiElements, setEmojiElements] = useState([]);
-  const [incorrect, setIncorrect] = useState(false);
+  // const {emojiElements} = useContext(Context);
 
-  // React.useEffect(() => {
-  //   setEmojiElements(emojiTable());
-  // }, []);
-
-  const emojiTable = () => {
-    const rows = [];
-    let row = [];
-    for (let i = 0; i < emojis.length; i++) {
-      if (i % 4 !== 0) {
-        row.push(
-          <TouchableOpacity
-            style={{
-              height: 42,
-              width: 42,
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: Dimensions.get('window').width * 0.01,
-            }}>
-            <Text
-              style={{
-                fontSize: 32,
-              }}>
-              {emojis[i]}
-            </Text>
-          </TouchableOpacity>,
-        );
-      } else {
-        rows.push(row);
-        row = [];
-        row.push(
-          <TouchableOpacity
-            style={{
-              height: 42,
-              width: 42,
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: Dimensions.get('window').width * 0.01,
-            }}>
-            <Text
-              style={{
-                fontSize: 32,
-              }}>
-              {emojis[i]}
-            </Text>
-          </TouchableOpacity>,
-        );
+  useEffect(() => {
+    if (open) {
+      const rows = [];
+      let row = [];
+      for (let i = 0; i < emojis.length; i++) {
+        if (i % 4 !== 0) {
+          row.push(
+            <TouchableOpacity
+              key={i}
+              onPress={() => addEmoji(emojis[i])}
+              style={styles.tap}>
+              <Text
+                style={{
+                  fontSize: 32,
+                }}>
+                {emojis[i]}
+              </Text>
+            </TouchableOpacity>,
+          );
+        } else {
+          rows.push(row);
+          row = [];
+          row.push(
+            <TouchableOpacity
+              key={i}
+              onPress={() => addEmoji(emojis[i])}
+              style={styles.tap}>
+              <Text
+                style={{
+                  fontSize: 32,
+                }}>
+                {emojis[i]}
+              </Text>
+            </TouchableOpacity>,
+          );
+        }
+        if (i === emojis.length - 1) {
+          rows.push(row);
+        }
       }
-      if (i === emojis.length - 1) {
-        rows.push(row);
-      }
+      setEmojiElements(rows);
     }
-    return rows;
-  };
-
-  const leaveRoom = () => {
-    firestore()
-      .collection('Rooms')
-      .doc(room)
-      .collection('Members')
-      .doc(nickname)
-      .set({Name: nickname, Email: user.email, On: false});
-  };
-
-  const login = async (email, pass) => {
-    try {
-      await auth().signInWithEmailAndPassword(email, pass);
-      // setEmojiElements(emojiTable());
-    } catch (e) {
-      setIncorrect(true);
-      console.log('error logging in', e);
-    }
-  };
-
-  const signup = async (email, pass, first, last) => {
-    try {
-      await auth().createUserWithEmailAndPassword(email, pass);
-      await firestore()
-        .collection('Users')
-        .doc(email.toLowerCase())
-        .set({first, last})
-        .then(() => {
-          console.log('user added!');
-        });
-      // setEmojiElements(emojiTable());
-    } catch (e) {
-      setSignupError(true);
-      console.log('error signing up', e);
-    }
-  };
-
-  const logout = async () => {
-    try {
-      await auth().signOut();
-      setIncorrect(false);
-    } catch (e) {
-      console.log('error logging out', e);
-    }
-  };
-
-  const google = async () => {
-    try {
-      const {idToken} = await GoogleSignin.signIn();
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      return auth().signInWithCredential(googleCredential);
-    } catch (e) {
-      setIncorrect(true);
-      console.log('error signing in with google', e);
-    }
-  };
+  }, [open]);
 
   return (
-    <Context.Provider
-      value={{
-        google,
-        user,
-        setUser,
-        login,
-        signup,
-        logout,
-        room,
-        setRoom,
-        nickname,
-        setNickname,
-        leaveRoom,
-        emojiElements,
-        incorrect,
-        setIncorrect,
-      }}>
-      {children}
-    </Context.Provider>
+    <ScrollView style={styles.scrollWindow}>
+      <View style={styles.container}>{emojiElements}</View>
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+  },
+  emoji: {
+    fontSize: 50,
+  },
+  row: {
+    marginBottom: 20,
+    width: Dimensions.get('window').width - 80,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+  },
+  scrollWindow: {
+    margin: 20,
+  },
+  tap: {
+    height: 42,
+    width: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: Dimensions.get('window').width * 0.01,
+  },
+});
 
 const emojis = [
   '😀',
@@ -1733,3 +1675,5 @@ const emojis = [
   '🇿🇲',
   '🇿🇼',
 ];
+
+export default Emojis;

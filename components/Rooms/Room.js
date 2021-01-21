@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {Context} from '../../context.js';
 import firestore from '@react-native-firebase/firestore';
@@ -43,7 +44,11 @@ const Room = ({name, rooms, setRoom}) => {
               .doc(selection)
               .collection('Members')
               .doc(writeNickname)
-              .set({Name: writeNickname, Email: user.email, On: true});
+              .set({
+                Name: writeNickname,
+                Email: user.email,
+                On: true,
+              });
             setNickname(writeNickname);
           } else {
             setError(true);
@@ -61,7 +66,7 @@ const Room = ({name, rooms, setRoom}) => {
               height: 80,
               padding: 24,
               margin: 10,
-              borderRadius: 20,
+              borderRadius: 26,
               backgroundColor: 'white',
               shadowOffset: {width: 0, height: 10},
               shadowColor: 'black',
@@ -73,7 +78,7 @@ const Room = ({name, rooms, setRoom}) => {
               height: 254,
               padding: 24,
               margin: 10,
-              borderRadius: 20,
+              borderRadius: 26,
               backgroundColor: 'white',
               shadowOffset: {width: 0, height: 10},
               shadowColor: 'black',
@@ -126,7 +131,7 @@ const Room = ({name, rooms, setRoom}) => {
                     borderWidth: 1,
                     borderRadius: 20,
                     height: 54,
-                    width: 250,
+                    width: Dimensions.get('window').width * 0.6,
                     paddingLeft: 15,
                     marginBottom: 12,
                     marginTop: 6,
@@ -137,7 +142,7 @@ const Room = ({name, rooms, setRoom}) => {
                     backgroundColor: 'rgb(220, 220, 220)',
                     borderRadius: 20,
                     height: 54,
-                    width: 250,
+                    width: Dimensions.get('window').width * 0.6,
                     paddingLeft: 15,
                     marginBottom: 12,
                     marginTop: 6,
@@ -193,7 +198,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(220, 220, 220)',
     borderRadius: 20,
     height: 54,
-    width: 250,
+    width: Dimensions.get('window').width * 0.6,
     paddingLeft: 15,
     marginBottom: 12,
     marginTop: 6,

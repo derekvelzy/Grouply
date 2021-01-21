@@ -23,7 +23,11 @@ const MyRoom = ({name, rooms, setRoom}) => {
       .doc(name)
       .collection('Members')
       .doc(getName._data.nickname)
-      .set({Name: getName._data.nickname, Email: user.email, On: true});
+      .set({
+        Name: getName._data.nickname,
+        Email: user.email,
+        On: true,
+      });
   };
 
   const getMembers = () => {
@@ -75,7 +79,7 @@ const styles = StyleSheet.create({
     height: 80,
     paddingLeft: 24,
     paddingRight: 24,
-    borderRadius: 20,
+    borderRadius: 26,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     height: 80,
     margin: 10,
-    borderRadius: 20,
+    borderRadius: 26,
     backgroundColor: '#ffa33c',
     shadowOffset: {width: 0, height: 10},
     shadowColor: 'black',

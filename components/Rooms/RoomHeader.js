@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     borderColor: 'rgb(180, 180, 180)',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 14,
     padding: 8,
     marginBottom: 4,
   },

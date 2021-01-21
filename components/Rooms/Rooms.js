@@ -10,6 +10,7 @@ import {
   ScrollView,
   TextInput,
   Animated,
+  Dimensions,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import RoomHeader from './RoomHeader.js';
@@ -19,6 +20,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const Rooms = () => {
   const {setRoom, user, setNickname} = useContext(Context);
+
   const [rooms, setRooms] = useState([]);
   const [myRooms, setMyRooms] = useState([]);
   const [search, setSearch] = useState('');
@@ -60,7 +62,7 @@ const Rooms = () => {
           await firestore()
             .collection('Rooms')
             .doc(roomName)
-            .set({Name: roomName, Password: code})
+            .set({Name: roomName, Password: code, Start: false})
             .then(() => {
               getMyRooms();
             })
@@ -191,7 +193,7 @@ const Rooms = () => {
             />)
           ))}
         <Text style={styles.title}>Browse Rooms</Text>
-        {filtRooms.length === 0 && search.length === 0
+        {search.length === 0
           ? rooms.map((name) => (
               <Room
                 name={name.name}
@@ -200,14 +202,17 @@ const Rooms = () => {
                 key={name.name}
               />
             ))
-          : filtRooms.map((name) => (
-              <Room
-                name={name.name}
-                rooms={rooms}
-                setRoom={setRoom}
-                key={name.name}
+          : (filtRooms.length !== 0 ?
+              filtRooms.map((name) => (
+                <Room
+                  name={name.name}
+                  rooms={rooms}
+                  setRoom={setRoom}
+                  key={name.name}
               />
-            ))}
+            )) : <Text style={styles.noResults}>No Results</Text>
+            )
+          }
         <View style={styles.extraScroll}></View>
       </ScrollView>
       <TouchableOpacity style={styles.create} onPress={() => {
@@ -223,89 +228,88 @@ const Rooms = () => {
         </LinearGradient>
       </TouchableOpacity>
       <Animated.View
-      style={{
-        position: 'absolute',
-        bottom: 0,
-        transform: [
-          {
-            translateY: animate.interpolate({
-              inputRange: [0, 1],
-              outputRange: [725, 0],
-            }),
-          },
-        ],
-        left: 8,
-        right: 8,
-        height: 705,
-        alignItems: 'center',
-        alignSelf: 'center',
-        borderRadius: 34,
-        backgroundColor: 'rgb(250, 250, 250)',
-        shadowOffset: {width: 0, height: -20},
-        shadowColor: 'black',
-        shadowOpacity: 0.3,
-        shadowRadius: 18,
-        elevation: 21,
-      }}
-      >
-        <Text style={styles.createNewText}>Create New Room</Text>
-        <Text
-          style={lengthErr ? {display: 'flex', color: 'red', fontSize: 16} : {display: 'none'}}>
-            Room Name must be longer
-        </Text>
-        <Text
-          style={existingErr ? {display: 'flex', color: 'red', fontSize: 16} : {display: 'none'}}>
-            Room already exists
-        </Text>
-        <Text
-          style={nicknameErr ? {display: 'flex', color: 'red', fontSize: 16} : {display: 'none'}}>
-            Must enter a Nickname
-        </Text>
-        <Text style={{ marginTop: 20, fontSize: 18, fontFamily: 'Avenir' }}>Room Name</Text>
-        <TextInput
-          placeholder="Room Name"
-          style={styles.roomInput}
-          value={roomName}
-          onChangeText={(e) => setRoomName(e)}
-        />
-        <Text style={{ marginTop: 20, fontSize: 18, fontFamily: 'Avenir'}}>Code</Text>
-        <TextInput
-          placeholder="Code"
-          style={styles.roomInput}
-          value={code}
-          onChangeText={(e) => setCode(e)}
-        />
-        <Text style={{ marginTop: 20, fontSize: 18, fontFamily: 'Avenir' }}>Nickname</Text>
-        <TextInput
-          placeholder="Nickname"
-          style={styles.roomInput}
-          value={nicknameDraft}
-          onChangeText={(e) => setNicknameDraft(e)}
-        />
-        <View style={styles.shadow}>
-          <LinearGradient
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 2}}
-            colors={['#ff913c', '#e7605c', '#ff4618']}
-            style={styles.createGrad}>
-            <TouchableOpacity
-              style={styles.generate}
-              onPress={() => createRoom()}
-            >
-              <Text style={{ fontSize: 22, color: 'white', fontFamily: 'Avenir' }}>Create</Text>
-            </TouchableOpacity>
-          </LinearGradient>
-        </View>
-        <TouchableOpacity
-          style={styles.close}
-          onPress={() => {
-            _start(true);
-            setSlider(!slider);
-            setLengthErr(false);
-            setExistingErr(false);
-            setNicknameErr(false);
-          }}
-         >
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          transform: [
+            {
+              translateY: animate.interpolate({
+                inputRange: [0, 1],
+                outputRange: [Dimensions.get('window').height * 0.8, 0],
+              }),
+            },
+          ],
+          left: 8,
+          right: 8,
+          height: Dimensions.get('window').height * 0.79,
+          alignItems: 'center',
+          alignSelf: 'center',
+          borderRadius: 34,
+          backgroundColor: 'rgb(250, 250, 250)',
+          shadowOffset: {width: 0, height: -20},
+          shadowColor: 'black',
+          shadowOpacity: 0.3,
+          shadowRadius: 18,
+          elevation: 21,
+        }}
+        >
+          <Text style={styles.createNewText}>Create New Room</Text>
+          <Text
+            style={lengthErr ? {display: 'flex', color: 'red', fontSize: 16} : {display: 'none'}}>
+              Room Name must be longer
+          </Text>
+          <Text
+            style={existingErr ? {display: 'flex', color: 'red', fontSize: 16} : {display: 'none'}}>
+              Room already exists
+          </Text>
+          <Text
+            style={nicknameErr ? {display: 'flex', color: 'red', fontSize: 16} : {display: 'none'}}>
+              Must enter a Nickname
+          </Text>
+          <Text style={styles.createNewRoomTitle}>Room Name</Text>
+          <TextInput
+            placeholder="Room Name"
+            style={styles.roomInput}
+            value={roomName}
+            onChangeText={(e) => setRoomName(e)}
+          />
+          <Text style={styles.createNewRoomTitle}>Code</Text>
+          <TextInput
+            placeholder="Code"
+            style={styles.roomInput}
+            value={code}
+            onChangeText={(e) => setCode(e)}
+          />
+          <Text style={styles.createNewRoomTitle}>Nickname</Text>
+          <TextInput
+            placeholder="Nickname"
+            style={styles.roomInput}
+            value={nicknameDraft}
+            onChangeText={(e) => setNicknameDraft(e)}
+          />
+          <View style={styles.shadow}>
+            <LinearGradient
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 2}}
+              colors={['#ff913c', '#e7605c', '#ff4618']}
+              style={styles.createGrad}>
+              <TouchableOpacity
+                style={styles.generate}
+                onPress={() => createRoom()}
+              >
+                <Text style={{ fontSize: 22, color: 'white', fontFamily: 'Avenir' }}>Create</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
+          <TouchableOpacity
+            style={styles.close}
+            onPress={() => {
+              _start(true);
+              setSlider(!slider);
+              setLengthErr(false);
+              setExistingErr(false);
+              setNicknameErr(false);
+            }}>
           <Text style={{ fontSize: 22, color: 'white', fontFamily: 'Avenir' }}>Close</Text>
         </TouchableOpacity>
       </Animated.View>
@@ -316,12 +320,12 @@ const Rooms = () => {
 const styles = StyleSheet.create({
   close: {
     borderRadius: 20,
-    height: 60,
+    height: Dimensions.get('window').height * 0.07,
     width: 140,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgb(30, 30, 30)',
-    marginTop: 40,
+    marginTop: Dimensions.get('window').height * 0.05,
     shadowOffset: {width: 0, height: 10},
     shadowColor: 'black',
     shadowOpacity: 0.3,
@@ -342,22 +346,20 @@ const styles = StyleSheet.create({
   },
   createGrad: {
     borderRadius: 20,
-    height: 60,
+    height: Dimensions.get('window').height * 0.07,
     width: 140,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
+    marginTop: Dimensions.get('window').height * 0.055,
   },
-  shadow: {
-    shadowOffset: {width: 0, height: 8},
-    shadowColor: 'rgb(100, 20, 20)',
-    shadowOpacity: 0.6,
-    shadowRadius: 14,
+  createNewRoomTitle: {
+    marginTop: Dimensions.get('window').height * 0.015,
+    fontSize: 18,
+    fontFamily: 'Avenir',
   },
   createNewText: {
-    fontSize: 30,
-    marginTop: 30,
-    marginBottom: 10,
+    fontSize: Dimensions.get('window').height * 0.035,
+    marginTop: Dimensions.get('window').height * 0.03,
     fontWeight: 'bold',
     fontFamily: 'Avenir Next',
   },
@@ -393,10 +395,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(220, 220, 220)',
     borderRadius: 20,
     marginTop: 10,
-    width: 260,
-    height: 60,
+    width: Dimensions.get('window').width * 0.7,
+    height: Dimensions.get('window').height * 0.06,
     textAlign: 'center',
-    fontFamily: 'Avenir'
+    fontFamily: 'Avenir',
+  },
+  noResults: {
+    fontSize: 18,
+    fontFamily: 'Avenir',
+    marginLeft: 15,
+    marginTop: 5,
+    color: 'rgb(100, 100, 100)',
   },
   noRooms: {
     marginLeft: 10,
@@ -424,6 +433,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     height: 50,
     margin: 10,
+    marginTop: 4,
     borderRadius: 25,
     shadowOffset: {width: 0, height: 6},
     shadowColor: 'rgb(26, 15, 19)',
@@ -431,9 +441,15 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 10,
   },
+  shadow: {
+    shadowOffset: {width: 0, height: 8},
+    shadowColor: 'rgb(100, 20, 20)',
+    shadowOpacity: 0.6,
+    shadowRadius: 14,
+  },
   title: {
-    marginLeft: 10,
-    fontSize: 22,
+    marginLeft: 14,
+    fontSize: 25,
     marginTop: 16,
     fontFamily: 'Avenir',
   },
